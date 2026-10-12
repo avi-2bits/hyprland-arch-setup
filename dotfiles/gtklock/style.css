@@ -1,0 +1,78 @@
+/* 1. Base Container */
+window {
+    background-color: #282828;
+}
+
+#window-box {
+    background-color: #1d2021;
+    border: 2px solid #504945;
+    padding: 30px 40px;
+}
+
+/* 2. Text & Clock Typography */
+#clock-label {
+    font-family: "Pixel Operator Mono", "Terminus", monospace;
+    font-size: 28px;
+    color: #8ec07c;
+    margin-bottom: 8px;
+}
+
+#date-label {
+    font-family: "Pixel Operator Mono", "Terminus", monospace;
+    font-size: 13px;
+    color: #7c6f64;
+    margin-bottom: 20px;
+}
+
+label {
+    font-family: "Pixel Operator Mono", "Terminus", monospace;
+    color: #bdae93;
+}
+
+/* 3. Password Input Box */
+entry {
+    background-color: #282828;
+    color: #bdae93;
+    font-family: "Pixel Operator Mono", "Terminus", monospace;
+    font-size: 14px;
+    border: 1px solid #7c6f64;
+    border-radius: 0px;
+    padding: 6px 12px;
+    min-width: 220px;
+    box-shadow: none;
+}
+
+entry:focus {
+    border-color: #8ec07c;
+}
+
+entry.error {
+    border-color: #fb4934;
+    color: #fb4934;
+}
+
+/* 4. Unlock Button */
+#unlock-button {
+    background-color: #3c3836;
+    background-image: none;
+    color: #bdae93;
+    font-family: "Pixel Operator Mono", "Terminus", monospace;
+    font-weight: bold;
+    border: 1px solid #504945;
+    border-radius: 0px;
+    padding: 6px 16px;
+    box-shadow: none;
+    text-shadow: none;
+    transition: all 0.15s ease;
+}
+
+#unlock-button:hover {
+    background-color: #504945;
+    border-color: #7c6f64;
+}
+
+#unlock-button:active {
+    background-color: #8ec07c;
+    color: #1d2021;
+    border-color: #8ec07c;
+}

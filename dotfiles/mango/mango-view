@@ -1,0 +1,27 @@
+#!/bin/bash
+# ~/.config/mango/mango-view
+# Intelligent tag switching that ignores global windows for focus
+
+TARGET_TAG="$1"
+
+# Exit if no tag argument is provided
+if [ -z "$TARGET_TAG" ]; then
+    exit 1
+fi
+
+# 1. ALWAYS perform the tag switch immediately so your keybindings never lock up!
+mango-msg dispatch view "$TARGET_TAG" 0
+
+# Allow the window manager a tiny moment to register the tag transition
+sleep 0.05
+
+# 2. Check if the currently focused window is a "global" window.
+# We query the compositor for the focusing client.
+IS_GLOBAL=$(mango-msg get_clients 2>/dev/null | jq -r '.clients[] | select(.focused == true) | .is_global' 2>/dev/null)
+
+# 3. If a global window is currently focused, it's hogging the spotlight.
+# We shift focus to the next tiled window in the stack.
+if [ "$IS_GLOBAL" = "true" ]; then
+    # Cycle focus to the next window in the stack on this tag
+    mango-msg dispatch focusstack next
+fi
