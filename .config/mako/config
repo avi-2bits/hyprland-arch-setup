@@ -1,0 +1,56 @@
+# ==========================================================
+# Mako Configuration: Flat Moss / Gruvbox Material Minimal
+# Path: ~/.config/mako/config
+# ==========================================================
+
+# --- Position & Layers ---
+anchor=top-right
+layer=overlay
+output=
+
+# --- Dimensions & Spacing ---
+width=340
+height=110outer-margin=18             # Adds clean breathing room from your Waybar/screen edge
+margin=6                    # Spacing between multiple notificationspadding=14,16               # Dynamic inner content spacing (top/bottom, left/right)
+
+# --- Border & Radius (Tiling-Friendly) ---
+border-size=1               # Flat, sharp outline
+border-radius=4             # Subtle curve to match terminal/Waybar curves
+border-color=#a9b665       # Forest/Moss Green accent
+background-color=#1d2021f0  # Dark charcoal with a smooth 94% opacitytext-color=#d4be98          # Gruvbox Material warm cream text
+
+# --- Typography & Content Layout ---font=JetBrains Mono 10      # Clean monospace layout (or "Fira Code 10")markup=1                    # Render HTML/Pango formatting safely
+format=<b>%s</b>\n<span foreground='#a89984'>%b</span>  # Distinct header and secondary body
+
+# --- Visual Indicators ---progress-color=over #89b482 # Subtle success-green progress bar
+icons=1                     # Show simple system icons
+max-icon-size=32
+icon-location=left
+
+# --- Timings & Limits ---
+default-timeout=4500
+ignore-timeout=0
+max-visible=3               # Prevent screen cluttersort=-time                  # Newest notifications always appear on top
+
+# --- Quick Controls ---
+on-button-left=dismisson-button-middle=invoke-default-action
+on-button-right=dismiss-all
+
+# ==========================================================
+# Contextual Urgency Overrides
+# ==========================================================
+
+# Low (System logs, background tracks)
+[urgency=low]
+border-color=#32302f
+background-color=#141617f0
+text-color=#928374          # Grayed out for minimal distraction
+default-timeout=2000
+
+# Critical (System errors, low battery)
+[urgency=critical]
+border-color=#ea6962        # Vibrant Gruvbox Orange/Red
+background-color=#282828f9
+text-color=#fbf1c7
+default-timeout=0           # Must be clicked to dismiss
+

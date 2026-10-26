@@ -1,0 +1,34 @@
+/* 1. Disable the horizontal tab bar */
+#TabsToolbar { 
+  display: none !important; 
+}
+
+/* 2. Hide the sidebar panel header */
+#sidebar-panel-header { 
+  display: none !important; 
+}
+
+/* 3. Make sidebar completely flush to the left edge */
+#sidebar-box { 
+  padding-inline-start: 0px !important; 
+}
+
+/* 4. Hide the vertical separator line between the sidebar and the webpage */
+#sidebar-splitter {
+  border: none !important;
+  width: 1px !important;
+  background-color: transparent !important;
+}
+
+/* 5. The Magic Wildcard: Make absolutely everything square */
+* { 
+  border-radius: 0px !important; 
+}
+
+/* 6. Fallback variable reset for system UI elements */
+:root {
+  --tab-border-radius: 0px !important;
+  --arrowpanel-border-radius: 0px !important;
+  --toolbarbutton-border-radius: 0px !important;
+}
+

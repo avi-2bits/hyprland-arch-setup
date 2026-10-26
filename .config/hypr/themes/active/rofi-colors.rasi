@@ -1,0 +1,8 @@
+/* Generated for Gruvbox Green Dark */
+* {
+    bg: #282828;
+    bg-panel: #32302f;
+    bg-sel: #504945;
+    fg: #ebdbb2;
+    accent: #b8bb26;
+}

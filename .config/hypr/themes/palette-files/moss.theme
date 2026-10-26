@@ -1,0 +1,30 @@
+# ----------------------------------------------------
+# MOSS LIGHT THEME (Fixed Light-Theme Contrast)
+# ----------------------------------------------------
+theme_name="Moss"
+
+# Main UI Colors (Hex without #)
+color_bg="C9C39F"          # Light aged paper background
+color_fg="38412F"          # High-contrast deep dark forest green text
+
+# 16-Color Terminal Palette
+# color0 must be DARK in terminal emulators so black text/contrast works!
+color0="38412F"            # Black (Deep Forest)
+color1="A65D57"            # Red
+color2="5D7A45"            # Green (Moss accent)
+color3="B89745"            # Yellow
+color4="6F8672"            # Blue
+color5="8F7D98"            # Magenta
+color6="5E9384"            # Cyan
+color7="D6D0AF"            # Light Gray (Paper tint)
+
+# Brights
+color8="505A45"            # Bright Black (Muted dark green)
+color9="BF746C"            # Bright Red
+color10="77995B"           # Bright Green
+color11="D0B365"           # Bright Yellow
+color12="89A08B"           # Bright Blue
+color13="A593B2"           # Bright Magenta
+color14="79B09F"           # Bright Cyan
+color15="FCFAF3"           # Bright White (Off-white highlight)
+

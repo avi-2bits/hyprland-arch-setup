@@ -1,0 +1,38 @@
+# ----------------------------------------------------
+# GRUVBOX GREEN DARK THEME
+# ----------------------------------------------------
+theme_name="Gruvbox Green Dark"
+
+# GTK & Icons
+gtk_theme="Gruvbox-Dark-BL"
+icon_theme="Gruvbox-Dark"
+cursor_theme="Gruvbox-Cursor"
+
+# Core Palette (hex without #)
+color_bg="282828"          # Dark gray background
+color_bg_panel="32302f"    # Slightly lighter dark gray for bar/menus
+color_bg_sel="504945"      # Selection / inactive borders
+color_fg="ebdbb2"          # Soft cream foreground
+color_fg_dim="a89984"      # Muted text
+color_accent="b8bb26"      # Gruvbox vibrant green
+color_accent_sec="98971a"  # Darker sage green
+
+# 16-Color Terminal Palette for Foot (Ansi + Bright)
+color0="282828"
+color1="cc241d"
+color2="98971a"
+color3="d79921"
+color4="458588"
+color5="b16286"
+color6="689d6a"
+color7="a89984"
+
+color8="928374"
+color9="fb4934"
+color10="b8bb26"
+color11="fabd2f"
+color12="83a598"
+color13="d3869b"
+color14="8ec07c"
+color15="ebdbb2"
+

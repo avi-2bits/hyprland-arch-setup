@@ -1,0 +1,30 @@
+# ----------------------------------------------------
+# GRUVBOX GREEN LIGHT THEME (Fixed Light-Theme Contrast)
+# ----------------------------------------------------
+theme_name="Gruvbox Green Light"
+
+# Main UI Colors (Hex without #)
+color_bg="fbf1c7"          # Soft light cream background
+color_fg="3c3836"          # Deep dark brown/charcoal text
+
+# 16-Color Terminal Palette
+# color0 must be DARK in terminal emulators so black text/contrast works!
+color0="3c3836"            # Black (Dark Charcoal)
+color1="cc241d"            # Red
+color2="79740e"            # Olive Green
+color3="b57614"            # Yellow
+color4="076678"            # Blue
+color5="8f3f71"            # Magenta
+color6="427b58"            # Cyan / Aqua
+color7="ebdbb2"            # Light Gray (Cream tint)
+
+# Brights
+color8="7c6f64"            # Bright Black (Medium Gray)
+color9="9d0006"            # Bright Red
+color10="98971a"           # Bright Green
+color11="d79921"           # Bright Yellow
+color12="458588"           # Bright Blue
+color13="b16286"           # Bright Magenta
+color14="689d6a"           # Bright Cyan
+color15="ffffff"           # Bright White
+

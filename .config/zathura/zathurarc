@@ -1,0 +1,44 @@
+# ==============================================================================
+# ZATHURA: GRUVBOX DUAL-THEME ENGINE
+# ==============================================================================
+
+# Opens with custom palette enabled
+set recolor                     "true"
+set recolor-keephue             "true"
+set recolor-reverse-video       "false"
+
+# Default Startup: Gruvbox Green Light
+set recolor-lightcolor          "#fbf1c7"
+set recolor-darkcolor           "#282828"
+set default-bg                  "#fbf1c7"
+set default-fg                  "#282828"
+set statusbar-bg                "#ebdbb2"
+set statusbar-fg                "#3c3836"
+
+# UI & Status bar styling
+set inputbar-bg                 "#fbf1c7"
+set inputbar-fg                 "#282828"
+set notification-bg             "#ebdbb2"
+set notification-fg             "#282828"
+set highlight-color             "#b8bb26"
+set highlight-active-color      "#fe8019"
+
+set completion-bg               "#ebdbb2"
+set completion-fg               "#282828"
+set completion-highlight-bg     "#79740e"
+set completion-highlight-fg     "#fbf1c7"
+
+set font                        "JetBrainsMono Nerd Font 10"
+set statusbar-h-padding         "10"
+set statusbar-v-padding         "6"
+set page-padding                "8"
+set selection-clipboard         "clipboard"
+set adjust-open                 "best-fit"
+
+# Unmap default bindings to prevent conflicts
+unmap i
+unmap <C-r>
+
+# Pass $DBUS directly to the toggle script for in-place live switching
+map i     exec "bash -c '~/.config/zathura/toggle.sh $DBUS'"
+map <C-r> exec "bash -c '~/.config/zathura/toggle.sh $DBUS'"
