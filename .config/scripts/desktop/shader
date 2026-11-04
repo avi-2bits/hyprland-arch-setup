@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+SHADER_DIR="$HOME/.config/hypr/shaders"
+rofi_menu="rofi -dmenu -i"
+
+# Build menu dynamically from shader directory
+mapfile -t shaders < <(
+    find "$SHADER_DIR" -maxdepth 1 -type f -name '*.glsl' -printf '%f\n' | sort
+)
+
+[ "${#shaders[@]}" -gt 0 ] || exit 1
+
+# Display available shaders
+choice="$(
+    printf '%s\n' "off" "${shaders[@]}" |
+    $rofi_menu -p "shader:"
+)" || exit 0
+
+[ -n "$choice" ] || exit 0
+
+# Disable shader
+if [ "$choice" = "off" ]; then
+    hyprctl eval 'hl.config({ decoration = { screen_shader = "" } })'
+    exit 0
+fi
+
+# Validate selection
+[[ " ${shaders[*]} " == *" $choice "* ]] || exit 1
+
+# Apply selected shader
+shader="$SHADER_DIR/$choice"
+
+hyprctl eval "hl.config({ decoration = { screen_shader = \"$shader\" } })"

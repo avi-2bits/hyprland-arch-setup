@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+#
+# txtcliphist: Zero-daemon, plain-text clipboard manager for Wayland
+# Inspired by BreadOnPenguins/scripts/shortcuts-menus/txtcliphist
+
+histfile="$HOME/.cache/cliphist"
+placeholder="<NEWLINE>"
+rofi_menu="rofi -dmenu -i"
+
+highlight() {
+	clip=$(wl-paste -p 2>/dev/null)
+	printf "%s" "$clip" | wl-copy 2>/dev/null
+}
+
+output() {
+	clip=$(cat)
+	printf "%s" "$clip" | wl-copy 2>/dev/null
+}
+
+write() {
+	[ -f "$histfile" ] || { notify-send "Creating $histfile"; touch "$histfile"; }
+	[ -z "$clip" ] && exit 0
+	multiline=$(echo "$clip" | sed ':a;N;$!ba;s/\n/'"$placeholder"'/g')
+	grep -Fxq "$multiline" "$histfile" || echo "$multiline" >> "$histfile"
+	notification="\"$multiline\""
+}
+
+sel() {
+	[ -f "$histfile" ] || exit 0
+	selection=$(tac "$histfile" | $rofi_menu -p "clip:")
+	[ -n "$selection" ] && echo "$selection" | sed "s/$placeholder/\n/g" | wl-copy && notification="Copied to clipboard!"
+}
+
+case "$1" in
+	add) highlight && write ;;
+	out) output && write ;;
+	sel|"") sel ;;
+	*) printf "%s | File: %s\n\nadd - copies primary selection to clipboard, and adds to history\nout - pipe commands to copy output to clipboard, and add to history\nsel - select from history with rofi and recopy (default)\n" "$0" "$histfile" ; exit 0 ;;
+esac
+
+[ -z "$notification" ] || notify-send "$notification"
+

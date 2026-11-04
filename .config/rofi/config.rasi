@@ -1,104 +1,110 @@
-/**
- * Rofi Minimal Aesthetic Deep Forest Green
- * Contrast: Low-fatigue matte background with a deep, earthy olive-forest green highlight.
- * Geometry: STICK TO SHARP CORNERS (0px border radius).
- */
+/* ~/.config/rofi/config.rasi */
+@import "~/.cache/matugen/colors-rofi.rasi"
 
 configuration {
-    /* --- Core Engine --- */
-    modi:                       "drun,run";
-    font:                       "JetBrainsMono Nerd Font 10";
-    show-icons:                 false; /* Zero clutter minimal look */
-    terminal:                   "foot";
-
-    /* --- Clean Display Names --- */
-    display-drun:               "APPS";
-    display-run:                "RUN";
-
-    /* --- Conflict Fixes & Vim Keys --- */
-    kb-remove-to-eol:           "";              /* Clears Ctrl+k */
-    kb-accept-entry:            "Return,KP_Enter"; /* Clears Ctrl+j */
-    kb-row-up:                  "Up,Control+k";
-    kb-row-down:                "Down,Control+j";
+    modi:                "drun,run";
+    show-icons:          false;
+    drun-display-format: "{name}";
+    matching:            "fuzzy";
+    scroll-method:       0;
+    disable-history:     true;
+    display-drun:        "launch app:";
+    display-run:         "run:";
 }
 
-@import "~/.config/hypr/themes/active/rofi-colors.rasi"
-
-
-/* --- Eye-Protection Color Palette --- */
-@theme "/dev/null"
-
-* {
-    /* Highly aesthetic, desaturated matte backdrops */
-    bg-base:     #232421; /* Soft near-black charcoal (earthy undertone) */
-    bg-select:   #2d302a; /* Slightly elevated dark-greenish gray for input container */
-    fg-light:    #ebdbb2; /* Soft Gruvbox cream (warm and natural) */
-    fg-dim:      #7c6f64; /* Muted stone gray for helper text */
-    
-    /* Low-saturation deep forest/olive tones */
-    forest-dark: #4f5b2a; /* Rich, mature olive-forest green (easy on eyes) */
-    forest-glow: #6e7a3a; /* Lighter olive accent for borders */
-
-    background-color: @bg-base;
-    text-color:       @fg-light;
-}
-
-/* --- Window Layout (Perfectly Sharp & Centered) --- */
 window {
-    width:            25%;         /* Ultra-compact minimal width */
-    border:           2px;         /* Flat border */
-    border-color:     @forest-dark;/* Muted forest green frame */
-    border-radius:    0px;         /* STRICTLY SHARP CORNERS */
-    padding:          12px;
+    location:         north;
+    anchor:           north;
+    x-offset:         0;
+    y-offset:         200px;
+    width:            560px;
+    background-color: @background; /* Dynamic background */
+    border:           0px;
+    padding:          0px;
 }
 
 mainbox {
-    spacing:          6px;
-    children:         [ inputbar, listview ];
+    orientation:      horizontal;
+    children:         [ prompt-box, right-box ];
+    spacing:          0px;
+    background-color: transparent;
 }
 
-/* --- Input Bar --- */
-inputbar {
+prompt-box {
+    orientation:      vertical;
+    expand:           false;
+    children:         [ prompt, dummy-left ];
     spacing:          0px;
-    padding:          6px;
-    background-color: @bg-select;  /* Distinct soft container */
-    border:           0 0 1px 0;   /* Sharp bottom divider line */
-    border-color:     @forest-glow;
-    children:         [ prompt, entry ];
+    background-color: transparent;
 }
 
 prompt {
-    text-color:       @forest-glow;
-    font:             "JetBrainsMono Nerd Font Bold 10";
-    padding:          0px 8px 0px 4px;
+    expand:           false;
+    background-color: @selected-bg; /* Accent color matching wallpaper */
+    text-color:       @background;  /* Dark text on active background */
+    font:             "Departure Mono 10";
+    padding:          3px 8px;
+}
+
+dummy-left {
+    expand:           true;
+    background-color: @background;
+}
+
+right-box {
+    orientation:      vertical;
+    expand:           true;
+    children:         [ entry, listview ];
+    spacing:          0px;
+    background-color: transparent;
 }
 
 entry {
-    text-color:       @fg-light;
-    placeholder:      "Type to search...";
-    placeholder-color:@fg-dim;
+    expand:           false;
+    background-color: @background;
+    text-color:       @foreground;
+    font:             "Departure Mono 10";
+    padding:          3px 8px;
+    placeholder:      "";
 }
 
-/* --- Vertical List View --- */
-listview {
-    lines:            6;           /* Stays compact vertically */
-    columns:          1;
-    fixed-height:     true;
-    spacing:          3px;
-    padding:          6px 0px 0px 0px;
-}
+
+  listview {
+      lines:            5;
+      columns:          1;
+      fixed-height:     true;
+      dynamic:          false;
+      scrollbar:        false;
+      background-color: @background;
+      spacing:          0px;
+      padding:          0px;
+      border:           0px;
+      margin:           0px;
+  }
+
 
 element {
-    padding:          5px 8px;
-    border-radius:    0px;         /* NO rounded corners */
+    orientation:      horizontal;
+    children:         [ element-text ];
+    padding:          3px 8px;
+    border:           0px;
+    background-color: transparent;
 }
-/* --- Interactive States --- */
-element selected {
-    background-color: @forest-dark;/* Cozy, dark olive selection bar */
-    text-color:       #fbf1c7;     /* High-contrast cream text over the deep green */
+
+element selected.normal {
+    background-color: @selected-bg; /* Accent background */
+    text-color:       @background;  /* Dark text */
+}
+
+element normal.normal,
+element alternate.normal {
+    background-color: transparent;
+    text-color:       @foreground;
 }
 
 element-text {
     background-color: transparent;
     text-color:       inherit;
+    font:             "Departure Mono 10";
 }
+

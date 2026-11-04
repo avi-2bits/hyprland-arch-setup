@@ -1,0 +1,19 @@
+# Light palette
+background-color={{colors.surface_container.light.hex}}
+text-color={{colors.on_surface.light.hex}}
+border-color={{colors.outline.light.hex}}
+
+[urgency=low]
+background-color={{colors.surface_container.light.hex}}
+text-color={{colors.on_surface.light.hex}}
+border-color={{colors.outline.light.hex}}
+
+[urgency=normal]
+background-color={{colors.surface_container.light.hex}}
+text-color={{colors.on_surface.light.hex}}
+border-color={{colors.primary.light.hex}}
+
+[urgency=high]
+background-color={{colors.surface_container_high.light.hex}}
+text-color={{colors.on_surface.light.hex}}
+border-color={{colors.error.light.hex}}

@@ -13,8 +13,9 @@ IMAGE_CACHE_PATH="${4}"
 PV_IMAGE_ENABLED="${5}"
 
 # Settings
-HIGHLIGHT_SIZE_MAX=262143  # 256KiB
-DEFAULT_SIZE="800x600"     # Resolution for previews
+HIGHLIGHT_SIZE_MAX=262143
+DEFAULT_SIZE="320x240"
+IMAGE_QUALITY=35
 
 handle_image() {
     local mimetype="${1}"
@@ -25,14 +26,14 @@ handle_image() {
             exit 1;;
 
         image/*)
-            # EXIF rotation
-            local orientation
-            orientation="$(identify -format '%[EXIF:Orientation]\n' -- "${FILE_PATH}" 2>/dev/null)"
-            if [[ -n "$orientation" && "$orientation" != 1 ]]; then
-                convert -- "${FILE_PATH}" -auto-orient -depth 8 -quality 75 "${IMAGE_CACHE_PATH}" && exit 6
-            fi
-            # Signal Ranger to use its native displayer (Sixel) for all other images
-            exit 7;;
+    # Lightweight cached image previews
+    convert -- "${FILE_PATH}" \
+        -auto-orient \
+        -thumbnail "${DEFAULT_SIZE}" \
+        -depth 8 \
+        -quality "${IMAGE_QUALITY}" \
+        "${IMAGE_CACHE_PATH}" && exit 6
+    exit 1;;
 
         video/*)
             ffmpegthumbnailer -i "${FILE_PATH}" -o "${IMAGE_CACHE_PATH}" -s 0 && exit 6
@@ -79,7 +80,7 @@ handle_mime() {
             if command -v bat >/dev/null; then
                 bat --color=always --style="plain" -- "${FILE_PATH}" && exit 5
             fi
-            pygmentize -f terminal256 -O "style=gruvbox-dark" -- "${FILE_PATH}" && exit 5
+            pygmentize -f terminal -- "${FILE_PATH}" && exit 5
             exit 2;;
 
         image/*|video/*|audio/*)

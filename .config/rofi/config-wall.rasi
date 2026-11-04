@@ -1,0 +1,140 @@
+/* ~/.config/rofi/config-wall.rasi */
+@import "~/.cache/matugen/colors-rofi.rasi"
+
+configuration {
+    show-icons:          true;
+    matching:            "fuzzy";
+    scroll-method:       0;
+    disable-history:     true;
+}
+
+window {
+    location:            north;
+    anchor:              north;
+    x-offset:            0;
+    y-offset:            200px;
+    width:               860px; /* 560px (Left Dmenu) + 300px (Right Preview) */
+    background-color:    @background;
+    border:              0px;
+    padding:             0px;
+}
+
+/* Horizontal split: Left dmenu column, 1px divider, Right preview box */
+mainbox {
+    orientation:         horizontal;
+    children:            [ left-column, divider, preview-box ];
+    spacing:             0px;
+    background-color:    transparent;
+}
+
+/* --- Left Column (Your Exact Dmenu Setup) --- */
+left-column {
+    orientation:         horizontal;
+    width:               560px;
+    expand:              false;
+    children:            [ prompt-box, right-box ];
+    spacing:             0px;
+    background-color:    transparent;
+}
+
+prompt-box {
+    orientation:         vertical;
+    expand:              false;
+    children:            [ prompt, dummy-left ];
+    spacing:             0px;
+    background-color:    transparent;
+}
+
+prompt {
+    expand:              false;
+    background-color:    @selected-bg;
+    text-color:          @selected-fg;
+    font:                "Departure Mono 10";
+    padding:             3px 8px;
+}
+
+dummy-left {
+    expand:              true;
+    background-color:    @background;
+}
+
+right-box {
+    orientation:         vertical;
+    expand:              true;
+    children:            [ entry, listview ];
+    spacing:             0px;
+    background-color:    transparent;
+}
+
+entry {
+    expand:              false;
+    background-color:    @background;
+    text-color:          @foreground;
+    font:                "Departure Mono 10";
+    padding:             3px 8px;
+    placeholder:         "";
+}
+
+listview {
+    lines:               8;
+    columns:             1;
+    fixed-height:        true;
+    dynamic:             false;
+    scrollbar:           false;
+    background-color:    @background;
+    spacing:             0px;
+    padding:             0px;
+    border:              0px;
+    margin:              0px;
+}
+
+element {
+    orientation:         horizontal;
+    children:            [ element-text ];
+    padding:             3px 8px;
+    border:              0px;
+    background-color:    transparent;
+}
+
+element selected.normal {
+    background-color:    @selected-bg;
+    text-color:          @selected-fg;
+}
+
+element normal.normal,
+element alternate.normal {
+    background-color:    transparent;
+    text-color:          @foreground;
+}
+
+element-text {
+    background-color:    transparent;
+    text-color:          inherit;
+    font:                "Departure Mono 10";
+}
+
+/* --- Middle Divider --- */
+divider {
+    expand:              false;
+    width:               1px;
+    background-color:    @selected-bg;
+}
+
+/* --- Right Column (Live Wallpaper Preview) --- */
+preview-box {
+    width:               300px;
+    expand:              false;
+    orientation:         vertical;
+    children:            [ icon-current-entry ];
+    background-color:    @background;
+    padding:             10px;
+}
+
+icon-current-entry {
+    expand:              true;
+    size:                260px;
+    horizontal-align:    0.5;
+    vertical-align:      0.5;
+    background-color:    transparent;
+}
+

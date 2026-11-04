@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Find all executable files in this script's folder, excluding this menu itself
+dir=$(dirname "$(realpath "$0")")
+me=$(basename "$0")
+
+# 1. Get executable files, filter out this menu script, and show them in rofi
+selected=$(find "$dir" -maxdepth 1 -type f -executable ! -name "$me" -printf "%f\n" | rofi -dmenu -p "tools:")
+
+# 2. If a script was selected, run it
+[ -n "$selected" ] && exec "$dir/$selected"
+

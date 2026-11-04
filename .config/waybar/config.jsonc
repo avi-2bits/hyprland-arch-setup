@@ -44,8 +44,10 @@
         "interface": "wlp2s0",
         "format-wifi": "{essid} ::",
         "format-disconnected": "net offline ::",
-        "tooltip": false
+        "tooltip": false,
+        "on-click": "foot --app-id=network-popup -e nmtui-go"
     },
+
     "cpu": {
         "interval": 5,
         "format": "cpu {usage}% ::"

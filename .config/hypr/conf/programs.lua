@@ -6,9 +6,6 @@ local terminal      = "foot"
 local filemanager   = "pcmanfm"
 local browser       = "librewolf"
 local menu          = "rofi -show drun"
-local powermenu_cmd = home .. "/.config/scripts/powermenu.sh"
-local sp_cmd        = home .. "/.config/scripts/sp.sh"
-
 -- Helper: Atomically reset submap and execute a command
 local function chord(cmd)
     return function()
@@ -21,41 +18,46 @@ end
 -- [1] PRIMARY APPLICATIONS (DIRECT SUPER + KEY)
 -- Everyday essentials you access constantly without chord delays
 -- =============================================================================
+
 hl.bind(MOD .. " + Return", hl.dsp.exec_cmd(terminal))       -- Terminal
 hl.bind(MOD .. " + e",      hl.dsp.exec_cmd(filemanager))    -- File Manager (PCManFM)
 hl.bind(MOD .. " + w",      hl.dsp.exec_cmd(browser))        -- Web Browser
 hl.bind(MOD .. " + space",  hl.dsp.exec_cmd(menu))           -- App Launcher / Rofi
-hl.bind(MOD .. " + Escape", hl.dsp.exec_cmd(powermenu_cmd))  -- Power Menu
+hl.bind(MOD .. " + n",      hl.dsp.exec_cmd(terminal .. " -e nvim")) -- Neovim
 
--- Launch Neovim in a standard, tiled window
-hl.bind(MOD .. " + n",      hl.dsp.exec_cmd(terminal .. " -e nvim")) 
+-- hl.bind("SUPER + c", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/linux-control/bin/control"))
+hl.bind("SUPER + Escape", hl.dsp.exec_cmd(home .. "/.config/scripts/system/sys"))
+
 
 -- =============================================================================
--- [2] SCRIPTS LEADER CHORD (SUPER + s)
--- Triggers Mako HUD menu via sp.sh, then awaits single action key
+-- [2] UTILITY & SCREENSHOT LEADER CHORD (SUPER + s)
+-- Executes folder routers and unified utilities without wrapping overhead
 -- =============================================================================
-hl.bind(MOD .. " + s", function()
-    hl.dispatch(hl.dsp.submap("scripts_leader"))
-    hl.dispatch(hl.dsp.exec_cmd(sp_cmd))
-end)
+local scripts_dir = home .. "/.config/scripts"
+
+hl.bind(MOD .. " + s", hl.dsp.submap("scripts_leader"))
 
 hl.define_submap("scripts_leader", function()
     local script_actions = {
-        ["f"] = sp_cmd .. " f",
-        ["a"] = sp_cmd .. " a",
-        ["s"] = sp_cmd .. " s",
-        ["n"] = sp_cmd .. " n",
-        ["m"] = sp_cmd .. " m",
+        -- --- Folder Menu Routers ---
+        ["s"] = scripts_dir .. "/system/sys-menu",     -- System folder menu
+        ["d"] = scripts_dir .. "/desktop/desk-menu",   -- Desktop folder menu
+        ["n"] = scripts_dir .. "/notes/notes-menu",     -- Notes folder menu
+        ["t"] = scripts_dir .. "/tools/tools-menu",     -- Tools folder menu
+
+        -- --- Quick Unified Actions (No wrapper) ---
+        ["f"] = scripts_dir .. "/desktop/shot full",    -- Full-screen screenshot
+        ["a"] = scripts_dir .. "/desktop/shot window",  -- Active window screenshot
+        ["w"] = scripts_dir .. "/desktop/shot",         -- Selected area screenshot (using slurp)
+        ["p"] = scripts_dir .. "/desktop/shot color",   -- Colorpicker (HEX to clipboard)
     }
+
     for key, command in pairs(script_actions) do
         hl.bind(key, chord(command))
     end
 
-    -- Cancel with Escape
-    hl.bind("escape", function()
-        hl.dispatch(hl.dsp.submap("reset"))
-        hl.dispatch(hl.dsp.exec_cmd("makoctl dismiss -a"))
-    end)
+    -- Cancel submap manually
+    hl.bind("escape", hl.dsp.submap("reset"))
 end)
 
 -- =============================================================================
@@ -67,7 +69,7 @@ hl.define_submap("programs_leader", function()
     local program_actions = {
         -- Floating TUIs (class flag -a matched in rules.lua)
         ["m"] = terminal .. " -a kew_floating -T 'kew' -e kew",
-        ["n"] = terminal .. " -a nmtui_floating nmtui",
+        ["n"] = terminal .. " -a nmtui_floating nmtui-go",
         ["b"] = terminal .. " -a bluetuith_floating bluetuith",
         
         -- Floating Todo TUI (Directly executes ~/todo using the absolute path variable)

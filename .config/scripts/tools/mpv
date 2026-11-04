@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# mpv: Dynamic local video picker
+# Inspired by BreadOnPenguins/scripts/tools/mpv
+
+# Edit this to point to your main videos/movies directory
+FOLDER="$HOME/Videos/"
+
+openvid () {
+	# List files, filter with rofi, and exit cleanly if escaped
+	NAME="$(echo "$(command ls "$FOLDER")" | rofi -dmenu -i -p "play:")" || exit 0
+	
+	# Execute mpv cleanly in the background
+	mpv "$FOLDER$NAME" >/dev/null 2>&1 &
+}
+
+openvid
+

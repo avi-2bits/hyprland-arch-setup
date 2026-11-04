@@ -1,11 +1,16 @@
 ## Exam:
-- [ ] CAT-2 from 31 Oct
-
+- [ ] CAT-2 from 4 Oct
 
 ## Imp:
 - [ ] IWT Practical
-- [ ] FCS Practical
+- [x] FCS Practical
 
+## linux
+- [ ] gtk, qt, rofi, other application color change system.
+
+## to-do:
+- [ ] pointers C
+- [ ] bitwise
 
 ## Subject:
 [[SPC]]

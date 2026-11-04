@@ -1,4 +1,5 @@
 
 ## to-do
-- [ ] x path in html
+- [ ] bitwise
+- [ ] pattern
 

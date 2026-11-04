@@ -1,3 +1,34 @@
+-- Sync Foot background with Neovim
+local function sync_terminal_background()
+  local normal = vim.api.nvim_get_hl(0, { name = "Normal" })
+
+  if not normal.bg then
+    return
+  end
+
+  io.stdout:write(string.format("\027]11;#%06x\027\\", normal.bg))
+  io.stdout:flush()
+end
+
+local function reset_terminal_background()
+  io.stdout:write("\027]111\027\\")
+  io.stdout:flush()
+end
+
+local group = vim.api.nvim_create_augroup("FootBackgroundSync", {
+  clear = true,
+})
+
+vim.api.nvim_create_autocmd({ "UIEnter", "ColorScheme" }, {
+  group = group,
+  callback = sync_terminal_background,
+})
+
+vim.api.nvim_create_autocmd({ "VimLeavePre", "UILeave" }, {
+  group = group,
+  callback = reset_terminal_background,
+})
+
 vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
 vim.g.mapleader = " "
 

@@ -26,8 +26,6 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("hyprctl keyword layerrule 'noanim, swaybg'")
 
     -- Restore the last-set wallpaper without hardcoding any paths
-    hl.exec_cmd(home .. "/.config/hypr/swaybg.sh")
-
-    hl.exec_cmd(home .. "/.config/themes/apply.py")
+    hl.exec_cmd(home .. "/.config/scripts/desktop/wallpaper restore")
 end)
 

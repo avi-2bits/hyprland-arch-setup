@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+rofi_menu="rofi -dmenu -i"
+
+case "$(printf "shutdown\nreboot\nzzz\nlock\nkill" | $rofi_menu -p "system:")" in
+	shutdown)
+		# Minimal inline confirmation: only executes if "y" is selected or typed
+		[ "$(printf "n\ny" | $rofi_menu -p "shutdown?")" = "y" ] && shutdown now
+		;;
+	reboot)
+		# Minimal inline confirmation: only executes if "y" is selected or typed
+		[ "$(printf "n\ny" | $rofi_menu -p "reboot?")" = "y" ] && systemctl reboot -i
+		;;
+	zzz)
+		gtklock & systemctl suspend -i
+		;;
+	lock)
+		gtklock
+		;;
+	kill)
+		# Process killer: uses awk to grab the PID ($1) and pass it directly to kill
+		ps -u "$USER" -o pid,comm,%cpu,%mem | $rofi_menu -p "kill:" | awk '{print $1}' | xargs -r kill
+		;;
+	*)
+		exit 1
+		;;
+esac
+

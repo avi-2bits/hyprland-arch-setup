@@ -1,0 +1,280 @@
+
+#!/usr/bin/env bash
+
+WALL_ROOT="$HOME/Pictures"
+CACHE_DIR="$HOME/.cache/matugen"
+MODE_FILE="$CACHE_DIR/mode"
+WALL_FILE="$CACHE_DIR/wal"
+ROFI_THEME="$HOME/.config/rofi/config-wall.rasi"
+
+mkdir -p "$CACHE_DIR"
+
+current_mode() {
+    local mode="dark"
+    [[ -f "$MODE_FILE" ]] && mode=$(<"$MODE_FILE")
+    [[ "$mode" == "light" ]] && printf 'light\n' || printf 'dark\n'
+}
+
+save_state() {
+    local mode="$1" img="$2"
+
+    printf '%s\n' "$mode" > "$MODE_FILE.tmp" &&
+    printf '%s\n' "$img" > "$WALL_FILE.tmp" &&
+    mv -f -- "$MODE_FILE.tmp" "$MODE_FILE" &&
+    mv -f -- "$WALL_FILE.tmp" "$WALL_FILE"
+}
+
+set_wallpaper() {
+    local img="$1"
+
+    command -v swaybg >/dev/null 2>&1 || {
+        printf 'swaybg is not installed.\n' >&2
+        return 1
+    }
+
+    pkill -x swaybg 2>/dev/null || true
+    swaybg -i "$img" -m fill >/dev/null 2>&1 &
+}
+
+select_waybar_palette() {
+    local mode="$1"
+    local source="$CACHE_DIR/colors-waybar-palette.css"
+    local output="$CACHE_DIR/colors-waybar.css"
+
+    [[ -f "$source" ]] || {
+        printf 'Missing Waybar palette: %s\n' "$source" >&2
+        return 1
+    }
+
+    awk -v mode="$mode" '
+        mode == "light" && /^@define-color light_/ {
+            sub(/^@define-color light_/, "@define-color ")
+            print
+        }
+
+        mode == "dark" &&
+        /^@define-color / && !/^@define-color light_/ {
+            print
+        }
+    ' "$source" > "$output.tmp" &&
+    mv -f -- "$output.tmp" "$output"
+}
+
+select_mako_palette() {
+    local mode="$1"
+    local source="$CACHE_DIR/colors-mako-$mode"
+    local output="$CACHE_DIR/colors-mako"
+
+    [[ -f "$source" ]] || {
+        printf 'Missing Mako palette: %s\n' "$source" >&2
+        return 1
+    }
+
+    cp -- "$source" "$output.tmp" &&
+    mv -f -- "$output.tmp" "$output"
+}
+
+select_rofi_palette() {
+    local mode="$1"
+    local source="$CACHE_DIR/colors-rofi-palette.rasi"
+    local output="$CACHE_DIR/colors-rofi.rasi"
+
+    [[ -f "$source" ]] || {
+        printf 'Missing Rofi palette: %s\n' "$source" >&2
+        return 1
+    }
+
+    awk -v mode="$mode" '
+        NR == 1 {
+            print
+            next
+        }
+
+        mode == "light" {
+            if (/^[[:space:]]*light-/) {
+                sub(/light-/, "")
+                print
+            } else if (/^[[:space:]]*}/) {
+                print
+            }
+        }
+
+        mode == "dark" && !/^[[:space:]]*light-/ {
+            print
+        }
+    ' "$source" > "$output.tmp" &&
+    mv -f -- "$output.tmp" "$output"
+}
+
+reload_theme() {
+    # Waybar
+    if pgrep -x waybar >/dev/null 2>&1; then
+        pkill -USR2 -x waybar 2>/dev/null ||
+            printf 'Warning: Waybar reload failed.\n' >&2
+    fi
+
+    # Mako
+    if pgrep -x mako >/dev/null 2>&1 && command -v makoctl >/dev/null 2>&1; then
+        makoctl reload ||
+            printf 'Warning: Mako reload failed.\n' >&2
+    fi
+
+    # Zsh
+    if pgrep -x zsh >/dev/null 2>&1; then
+        pkill -USR1 -x zsh 2>/dev/null ||
+            printf 'Warning: Zsh reload failed.\n' >&2
+    fi
+
+    # Hyprland
+    if command -v hyprctl >/dev/null 2>&1; then
+        hyprctl reload >/dev/null 2>&1 ||
+            printf 'Warning: Hyprland reload failed.\n' >&2
+
+    fi
+}
+
+apply_theme() {
+    local img="$1"
+    local mode="${2:-$(current_mode)}"
+
+    [[ "$mode" == "dark" || "$mode" == "light" ]] || {
+        printf 'Invalid mode: %s\n' "$mode" >&2
+        return 1
+    }
+
+    img=$(realpath -e -- "$img") || {
+        printf 'Wallpaper not found: %s\n' "$1" >&2
+        return 1
+    }
+
+    # Generate all Matugen templates.
+    matugen image "$img" \
+        -m "$mode" \
+        -t scheme-tonal-spot \
+        --source-color-index 0 \
+        --quiet || {
+            printf 'Matugen generation failed.\n' >&2
+            return 1
+        }
+
+    # Select the active palettes.
+    select_waybar_palette "$mode" || return 1
+    select_mako_palette "$mode" || return 1
+    select_rofi_palette "$mode" || return 1
+
+    # Apply wallpaper and save state.
+    set_wallpaper "$img" || return 1
+    save_state "$mode" "$img" || return 1
+
+    reload_theme
+}
+
+toggle_mode() {
+    local mode
+    mode=$(current_mode)
+
+    [[ "$mode" == "dark" ]] && mode="light" || mode="dark"
+
+    [[ -f "$WALL_FILE" ]] || {
+        printf 'No saved wallpaper. Choose one first.\n' >&2
+        return 1
+    }
+
+    apply_theme "$(<"$WALL_FILE")" "$mode" || return 1
+
+    command -v notify-send >/dev/null 2>&1 &&
+        notify-send "Theme" "Switched to $mode mode"
+}
+
+restore_wallpaper() {
+    [[ -f "$WALL_FILE" ]] || {
+        printf 'No saved wallpaper to restore.\n' >&2
+        return 1
+    }
+
+    apply_theme "$(<"$WALL_FILE")" "$(current_mode)"
+}
+
+launch_picker() {
+    local dir="$WALL_ROOT"
+    local choice path
+
+    while true; do
+        choice=$(
+            {
+                [[ "$dir" != "$WALL_ROOT" ]] &&
+                    printf '%s\0icon\x1ffolder\n' '../'
+
+                while IFS= read -r -d '' path; do
+                    printf '%s\0icon\x1ffolder\n' "$(basename -- "$path")/"
+                done < <(
+                    find "$dir" -maxdepth 1 -mindepth 1 \
+                        -type d ! -name '.*' -print0 | sort -z
+                )
+
+                while IFS= read -r -d '' path; do
+                    printf '%s\0icon\x1f%s\n' \
+                        "$(basename -- "$path")" "$path"
+                done < <(
+                    find "$dir" -maxdepth 1 -mindepth 1 -type f \
+                        \( -iname '*.jpg' -o -iname '*.jpeg' \
+                        -o -iname '*.png' -o -iname '*.webp' \) \
+                        -print0 | sort -z
+                )
+            } | rofi -dmenu -i -show-icons -p "wall:" -theme "$ROFI_THEME"
+        )
+
+        [[ -z "$choice" ]] && return 0
+
+        case "$choice" in
+            ../)
+                dir=$(dirname -- "$dir")
+                ;;
+            */)
+                dir="$dir/${choice%/}"
+                ;;
+            *)
+                apply_theme "$dir/$choice"
+                return $?
+                ;;
+        esac
+    done
+}
+
+usage() {
+    cat <<'EOF'
+Usage:
+  wallpaper                       Open wallpaper picker
+  wallpaper toggle                Toggle light/dark mode
+  wallpaper restore               Restore saved wallpaper
+  wallpaper apply IMAGE [MODE]    Apply wallpaper and optional mode
+  wallpaper IMAGE [MODE]          Direct wallpaper application
+  wallpaper --help                Show this help
+EOF
+}
+
+case "${1:-}" in
+    toggle)
+        toggle_mode
+        ;;
+    restore)
+        restore_wallpaper
+        ;;
+    apply)
+        [[ -n "${2:-}" ]] || {
+            usage >&2
+            exit 1
+        }
+        apply_theme "$2" "${3:-$(current_mode)}"
+        ;;
+    --help|-h)
+        usage
+        ;;
+    "")
+        launch_picker
+        ;;
+    *)
+        apply_theme "$1" "${2:-$(current_mode)}"
+        ;;
+esac
+

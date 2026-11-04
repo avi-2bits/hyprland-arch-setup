@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+#
+# shot: Wayland screenshot tool and colorpicker
+# Designed for Hyprland using grim, slurp, and wl-clipboard
+# Inspired by BreadOnPenguins/scripts
+
+set -euo pipefail
+
+# 1. Wayland dependencies check
+for cmd in grim slurp wl-copy notify-send; do
+	command -v "$cmd" &>/dev/null || { echo "Missing: $cmd" >&2; exit 1; }
+done
+
+OUTDIR="${2:-$HOME/Screenshots}"
+mkdir -p "$OUTDIR"
+
+FILE="$OUTDIR/$(date +%Y%m%d_%H%M%S).png"
+TMP=$(mktemp --suffix=.png)
+trap 'rm -f "$TMP"' EXIT
+
+show_help(){ 
+	cat <<EOF
+Usage: $0 [color|full|window] [output_dir]
+
+Environment options:
+  WATERMARK=1
+  WATERMARK_TEXT='text'
+  WATERMARK_POS=position
+  WATERMARK_SIZE=px
+  WATERMARK_BG='#rrggbbaa'
+EOF
+}
+
+post(){ 
+	[[ "${WATERMARK:-}" == "1" ]] && { 
+		command -v magick &>/dev/null || { echo "Missing: magick" >&2; exit 1; }
+		# Watermark subsystem
+		magick "$FILE" \
+			-gravity "${WATERMARK_POS:-southeast}" \
+			-pointsize "${WATERMARK_SIZE:-28}" \
+			-fill white -undercolor "${WATERMARK_BG:-#00000080}" \
+			-annotate +20+20 "${WATERMARK_TEXT:-$(date '+%Y-%m-%d %H:%M')}" \
+			"$FILE"
+	}
+
+	# Copy image to system clipboard and send notification
+	wl-copy -t image/png < "$FILE" && notify-send -i "$FILE" "Screenshot: $(basename "$FILE")"
+	command -v imgcliphist &>/dev/null && imgcliphist add
+}
+
+colorpicker(){ 
+	command -v magick &>/dev/null || { notify-send "Missing: magick"; exit 1; }
+	
+	# slurp -p gets coordinates of a single pixel, grim grabs just that 1x1 area
+	geom=$(slurp -p -b 00000000 -c 828C6A -w 2) || exit 0
+	grim -g "$geom" "$TMP"
+	
+	hex=$(magick "$TMP" -format "#%[hex:p{0,0}]" info: 2>/dev/null || echo "#??????")
+	echo "$hex" | tr -d '\n' | wl-copy && notify-send -i "$TMP" "Color: $hex"
+}
+
+capture_full(){ 
+	grim "$FILE" && post
+}
+
+capture_window(){ 
+	# Ask Hyprland for the coordinates and size of the currently focused window
+	geom=$(hyprctl activewindow -j | jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"')
+	grim -g "$geom" "$FILE" && post
+}
+
+capture_selection(){ 
+	# Let user draw box with slurp, capture with grim (uses your Gruvbox light green #828C6A as border)
+	geom=$(slurp -b 00000033 -c 828C6A -w 2) || exit 0
+	grim -g "$geom" "$FILE" && post
+}
+
+main(){ 
+	case "${1:-}" in
+		-h|--help) show_help ;;
+		color*)    colorpicker ;;
+		full)      capture_full ;;
+		window)    capture_window ;;
+		*)         capture_selection ;;
+	esac
+}
+
+main "$@"
+

@@ -1,0 +1,20 @@
+# Dark palette
+background-color={{colors.surface_container.dark.hex}}
+text-color={{colors.on_surface.dark.hex}}
+border-color={{colors.outline.dark.hex}}
+
+[urgency=low]
+background-color={{colors.surface_container.dark.hex}}
+text-color={{colors.on_surface.dark.hex}}
+border-color={{colors.outline.dark.hex}}
+
+[urgency=normal]
+background-color={{colors.surface_container.dark.hex}}
+text-color={{colors.on_surface.dark.hex}}
+border-color={{colors.primary.dark.hex}}
+
+[urgency=high]
+background-color={{colors.surface_container_high.dark.hex}}
+text-color={{colors.on_surface.dark.hex}}
+border-color={{colors.error.dark.hex}}
+

@@ -1,0 +1,45 @@
+/* DARK PALETTE */
+@define-color background {{colors.surface.dark.hex}};
+@define-color foreground {{colors.on_surface.dark.hex}};
+
+@define-color surface {{colors.surface_container.dark.hex}};
+@define-color surface_high {{colors.surface_container_high.dark.hex}};
+@define-color surface_highest {{colors.surface_container_highest.dark.hex}};
+
+@define-color primary {{colors.primary.dark.hex}};
+@define-color secondary {{colors.secondary.dark.hex}};
+@define-color tertiary {{colors.tertiary.dark.hex}};
+
+@define-color on_primary {{colors.on_primary.dark.hex}};
+@define-color on_secondary {{colors.on_secondary.dark.hex}};
+
+@define-color error {{colors.error.dark.hex}};
+@define-color outline {{colors.outline.dark.hex}};
+
+@define-color color0 {{colors.surface_container.dark.hex}};
+@define-color color2 {{colors.primary.dark.hex}};
+@define-color color8 {{colors.outline.dark.hex}};
+
+
+/* LIGHT PALETTE */
+@define-color light_background {{colors.surface_container.light.hex}};
+@define-color light_foreground {{colors.on_surface.light.hex}};
+
+@define-color light_surface {{colors.surface_container.light.hex}};
+@define-color light_surface_high {{colors.surface_container_high.light.hex}};
+@define-color light_surface_highest {{colors.surface_container_highest.light.hex}};
+
+@define-color light_primary {{colors.primary.light.hex}};
+@define-color light_secondary {{colors.secondary.light.hex}};
+@define-color light_tertiary {{colors.tertiary.light.hex}};
+
+@define-color light_on_primary {{colors.on_primary.light.hex}};
+@define-color light_on_secondary {{colors.on_secondary.light.hex}};
+
+@define-color light_error {{colors.error.light.hex}};
+@define-color light_outline {{colors.outline.light.hex}};
+
+@define-color light_color0 {{colors.surface_container.light.hex}};
+@define-color light_color2 {{colors.primary.light.hex}};
+@define-color light_color8 {{colors.outline.light.hex}};
+

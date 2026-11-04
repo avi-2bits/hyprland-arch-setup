@@ -1,0 +1,43 @@
+* {
+    /* DARK */
+    background: {{colors.surface_container_highest.dark.hex}};
+    foreground: {{colors.on_surface.dark.hex}};
+
+    surface: {{colors.surface_container.dark.hex}};
+    surface-high: {{colors.surface_container_high.dark.hex}};
+    surface-highest: {{colors.surface_container_highest.dark.hex}};
+
+    primary: {{colors.primary.dark.hex}};
+    secondary: {{colors.secondary.dark.hex}};
+    tertiary: {{colors.tertiary.dark.hex}};
+
+    on-primary: {{colors.on_primary.dark.hex}};
+    on-secondary: {{colors.on_secondary.dark.hex}};
+
+    border: {{colors.outline.dark.hex}};
+    urgent: {{colors.error.dark.hex}};
+
+    selected-bg: {{colors.primary.dark.hex}};
+    selected-fg: {{colors.on_primary.dark.hex}};
+
+    /* LIGHT */
+    light-background: {{colors.surface_container_highest.light.hex}};
+    light-foreground: {{colors.on_surface.light.hex}};
+
+    light-surface: {{colors.surface_container.light.hex}};
+    light-surface-high: {{colors.surface_container_high.light.hex}};
+    light-surface-highest: {{colors.surface_container_highest.light.hex}};
+
+    light-primary: {{colors.primary.light.hex}};
+    light-secondary: {{colors.secondary.light.hex}};
+    light-tertiary: {{colors.tertiary.light.hex}};
+
+    light-on-primary: {{colors.on_primary.light.hex}};
+    light-on-secondary: {{colors.on_secondary.light.hex}};
+
+    light-border: {{colors.outline.light.hex}};
+    light-urgent: {{colors.error.light.hex}};
+
+    light-selected-bg: {{colors.primary.light.hex}};
+    light-selected-fg: {{colors.on_primary.light.hex}};
+}

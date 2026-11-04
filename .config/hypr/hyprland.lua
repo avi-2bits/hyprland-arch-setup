@@ -18,3 +18,12 @@ require("conf.keybinds")
 require("conf.programs")
 require("conf.rules")
 
+------------------------------------------------
+
+hl.config({
+    debug = {
+        damage_tracking = 0,
+    }
+})
+
+
