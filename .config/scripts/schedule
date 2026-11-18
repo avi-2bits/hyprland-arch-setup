@@ -1,0 +1,58 @@
+#!/bin/bash
+
+DIR="$HOME/Schedule"
+MASTER="$DIR/schedule.md"
+ACTIVE="$DIR/active.md"
+BACKUP="$DIR/backup.md"
+
+# Check whether a required file exists
+check_file() {
+    if [[ ! -f "$1" ]]; then
+        echo "Missing file: $1"
+        echo "Please create it first."
+        exit 1
+    fi
+}
+
+case "$1" in
+    "")
+        check_file "$ACTIVE"
+
+        day=$(date +%A)
+
+        awk -v day="$day" '
+            $0 == "# " day { found=1; print; next }
+            found && /^# / { exit }
+            found { print }
+            END { if (!found) exit 1 }
+        ' "$ACTIVE" || {
+            echo "Weekday heading not found: $day"
+            exit 1
+        }
+        ;;
+
+    all)
+        check_file "$ACTIVE"
+        cat "$ACTIVE"
+        ;;
+
+    edit)
+        check_file "$ACTIVE"
+        "${EDITOR:-nvim}" "$ACTIVE"
+        ;;
+
+    new)
+        check_file "$MASTER"
+        check_file "$ACTIVE"
+        check_file "$BACKUP"
+
+        cp -- "$ACTIVE" "$BACKUP" &&
+        cp -- "$MASTER" "$ACTIVE" &&
+        echo "Schedule updated. Previous schedule backed up."
+        ;;
+
+    *)
+        echo "Usage: schedule [ all | edit | new ]"
+        exit 1
+        ;;
+esac
